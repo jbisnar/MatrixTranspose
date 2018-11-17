@@ -2,8 +2,6 @@
 #include <stdlib.h>
 
 void printmat (int* matrix, int width);
-void transmat (int mwidth, int bwidth, int* mat, int* block);
-void transblock (int x, int y, int mwidth, int bwidth, int* mat, int* block);
 
 int main (int argc, char**argv) {
   if (argc != 3) {
@@ -23,34 +21,18 @@ int main (int argc, char**argv) {
     matrix[i] = i;
   }
 
+  int tmp;
   printmat(matrix, matwidth);
-  transmat(matwidth, blockwidth, matrix, block);
+  for (int i = 0; i < matwidth; i++) {
+    for (int j = i+1; j < matwidth; j++) {
+      tmp = matrix[i*matwidth + j];
+      matrix[i*matwidth + j] = matrix[j*matwidth + i];
+      matrix[j*matwidth + i] = tmp;
+    }
+  }
+  printmat(matrix, matwidth);
   free(matrix);
   free(block);
-}
-
-void transmat (int mwidth, int bwidth, int* mat, int* block) {
-  int redwidth = mwidth / bwidth;
-  for (int i = 0; i < redwidth; i++) {
-    for (int j = 0; j < redwidth; j++) {
-      //printf("(%d, %d)\n", i*bwidth, j*bwidth);
-      transblock (j*bwidth, i*bwidth, mwidth, bwidth, mat, block);
-    }
-  }
-}
-
-void transblock (int x, int y, int mwidth, int bwidth, int* mat, int* block) {
-  int endx = x+bwidth;
-  int endy = y+bwidth;
-  int swapwidth;
-
-  for (int i = y; i < endy; i++) {
-    for (int j = x; j < endx; j++) {
-      block[(i-y)*bwidth+(j-x)] = mat[i*mwidth+j];
-    }
-  }
-  printmat(block, bwidth);
-  printf("\n");
 }
 
 void printmat (int* matrix, int width) {
