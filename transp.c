@@ -23,11 +23,25 @@ int main (int argc, char**argv) {
 
   int tmp;
   printmat(matrix, matwidth);
-  for (int i = 0; i < matwidth; i++) {
-    for (int j = i+1; j < matwidth; j++) {
-      tmp = matrix[i*matwidth + j];
-      matrix[i*matwidth + j] = matrix[j*matwidth + i];
-      matrix[j*matwidth + i] = tmp;
+  for (int i = 0; i < matwidth; i += blockwidth) {
+    for (int j = i; j < matwidth; j += blockwidth) {
+      if (j == i) {
+	for (int k = 0; k < blockwidth; k++) {
+	  for (int l = k+1; l < blockwidth; l++) {
+	    tmp = matrix[(i+k)*matwidth + j + l];
+	    matrix[(i+k)*matwidth + j + l] = matrix[(j+l)*matwidth + i + k];
+	    matrix[(j+l)*matwidth + i + k] = tmp;
+	  }
+	}
+      } else {
+	for (int k = 0; k < blockwidth; k++) {
+	  for (int l = 0; l < blockwidth; l++) {
+	    tmp = matrix[(i+k)*matwidth + j + l];
+	    matrix[(i+k)*matwidth + j + l] = matrix[(j+l)*matwidth + i + k];
+	    matrix[(j+l)*matwidth + i + k] = tmp;
+	  }
+	}
+      }
     }
   }
   printmat(matrix, matwidth);
@@ -42,4 +56,5 @@ void printmat (int* matrix, int width) {
       printf ("\n");
     }
   }
+  printf ("\n");
 }
