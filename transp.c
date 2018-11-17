@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <unistd.h>
 
 void printmat (int* matrix, int width);
 
@@ -12,17 +14,23 @@ int main (int argc, char**argv) {
 
   int matwidth = atoi(argv[1]);
   int blockwidth = atoi(argv[2]);
-
-  int* matrix = malloc(matwidth*matwidth*sizeof(int));
-  int* block = malloc(blockwidth*blockwidth*sizeof(int));
-
-  for (int i = 0; i < matwidth*matwidth; i++) {
-    //matrix[i] = rand();
-    matrix[i] = i;
+  if (blockwidth < 1) {
+    printf("Invalid block width being replaced with 1\n");
+    blockwidth = 1;
   }
 
+  int* matrix = malloc(matwidth*matwidth*sizeof(int));
+
+  for (int i = 0; i < matwidth*matwidth; i++) {
+    matrix[i] = rand();
+    //matrix[i] = i;
+  }
+
+  struct timeval starttime;
+  gettimeofday(&starttime, NULL);
+  
   int tmp;
-  printmat(matrix, matwidth);
+  //printmat(matrix, matwidth);
   for (int i = 0; i < matwidth; i += blockwidth) {
     for (int j = i; j < matwidth; j += blockwidth) {
       if (j == i) {
@@ -44,9 +52,12 @@ int main (int argc, char**argv) {
       }
     }
   }
-  printmat(matrix, matwidth);
+  struct timeval endtime;
+  gettimeofday(&endtime, NULL);
+  printf("Time: %ld microseconds\n", (endtime.tv_sec - starttime.tv_sec)*1000000 + endtime.tv_usec - starttime.tv_usec);
+  
+  //printmat(matrix, matwidth);
   free(matrix);
-  free(block);
 }
 
 void printmat (int* matrix, int width) {
