@@ -24,51 +24,32 @@ int main (int argc, char**argv) {
   int* trans = malloc(matwidth*matheight*sizeof(int));
 
   for (int i = 0; i < matwidth*matheight; i++) {
-    //matrix[i] = rand();
-    matrix[i] = i;
+    matrix[i] = rand();
+    //matrix[i] = i;
   }
 
   struct timeval starttime;
   gettimeofday(&starttime, NULL);
   
   int tmp;
-  printmat(matrix, matwidth, matheight);
+  //printmat(matrix, matwidth, matheight);
   for (int i = 0; i < matheight; i += blockwidth) {
     for (int j = 0; j < matwidth; j += blockwidth) {
       for (int k = 0; k < blockwidth; k++) {
 	for (int l = 0; l < blockwidth; l++) {
 	  if ((i+k) < matheight && (j+l) < matwidth) {
-	    printf("Transposing (%d,%d) to (%d,%d)\n",(j+l),(i+k),(i+k),(j+l));
+	    //printf("Transposing (%d,%d) to (%d,%d)\n",(j+l),(i+k),(i+k),(j+l));
 	    trans[(j+l)*matheight+(i+k)] = matrix[(i+k)*matwidth+(j+l)];
 	  }
 	}
       }
-      /*
-      if (j == i) {
-	for (int k = 0; k < blockwidth; k++) {
-	  for (int l = k+1; l < blockwidth; l++) {
-	    tmp = matrix[(i+k)*matwidth + j + l];
-	    matrix[(i+k)*matwidth + j + l] = matrix[(j+l)*matwidth + i + k];
-	    matrix[(j+l)*matwidth + i + k] = tmp;
-	  }
-	}
-      } else {
-	for (int k = 0; k < blockwidth; k++) {
-	  for (int l = 0; l < blockwidth; l++) {
-	    tmp = matrix[(i+k)*matwidth + j + l];
-	    matrix[(i+k)*matwidth + j + l] = matrix[(j+l)*matwidth + i + k];
-	    matrix[(j+l)*matwidth + i + k] = tmp;
-	  }
-	}
-      }
-      */
     }
   }
   struct timeval endtime;
   gettimeofday(&endtime, NULL);
   printf("Time: %ld microseconds\n", (endtime.tv_sec - starttime.tv_sec)*1000000 + endtime.tv_usec - starttime.tv_usec);
   
-  printmat(trans, matheight, matwidth);
+  //printmat(trans, matheight, matwidth);
   free(matrix);
 }
 
